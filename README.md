@@ -1,2 +1,132 @@
 # aula-1
-matplotip,seaborn,pandas
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+df = pd.read_csv(
+    "datatran2024.csv",
+    encoding="latin1",
+    sep=";"
+)
+print(df["pessoas"].value_counts())
+print(df["fase_dia"].value_counts())
+print(df["condicao_metereologica"].value_counts())
+print(df["feridos"].value_counts())
+print(df["ilesos"].value_counts())
+print(df["feridos_graves"].value_counts())
+print(df["feridos_leves"].value_counts())
+print(df["mortos"].value_counts())
+condicao = df["condicao_metereologica"].value_counts()
+
+plt.figure(figsize=(8, 8))
+
+plt.pie(
+    condicao,
+    labels=condicao.index,
+    autopct="%1.1f%%",
+    startangle=90
+)
+plt.title("Acidentes por condição meteorológica - PRF 2024")
+plt.show()
+#sns.countplot(data=df, x="fase_dia")
+#plt.show()
+pessoas = df["pessoas"].value_counts().sort_index()
+
+plt.figure(figsize=(10, 6))
+
+sns.barplot(
+    x=pessoas.index,
+    y=pessoas.values
+)
+
+plt.title("Número de pessoas envolvidas por acidente - PRF 2024")
+plt.xlabel("Pessoas envolvidas")
+plt.ylabel("Número de acidentes")
+
+plt.show()
+
+#sns.countplot(data=df, x="uf")
+#plt.show()
+import pandas as pd
+import seaborn as sns
+import matplotlib.pyplot as plt
+
+dados = pd.read_csv(
+    "datatran2024.csv",
+    encoding="latin1",
+    sep=";"
+)
+
+totais = pd.DataFrame({
+    "Situação": ["Feridos", "Mortos", "Ilesos"],
+    "Quantidade": [
+        dados["feridos"].sum(),
+        dados["mortos"].sum(),
+        dados["ilesos"].sum()
+    ]
+})
+
+sns.barplot(
+    data=totais,
+    x="Situação",
+    y="Quantidade"
+)
+
+plt.title("Pessoas envolvidas em sinistros - PRF 2024")
+plt.xlabel("Situação")
+plt.ylabel("Quantidade de pessoas")
+
+plt.show()
+mortos = dados.groupby(
+    ["condicao_metereologica", "fase_dia"]
+)["mortos"].sum().reset_index()
+
+plt.figure(figsize=(14, 7))
+
+sns.barplot(
+    data=mortos,
+    x="condicao_metereologica",
+    y="mortos",
+    hue="fase_dia"
+)
+
+condicao = df["condicao_metereologica"].value_counts()
+
+plt.figure(figsize=(11, 8))
+
+wedges, texts, autotexts = plt.pie(
+    condicao,
+    autopct="%1.1f%%",
+    startangle=90,
+    pctdistance=0.7,
+    textprops={"fontsize": 9}
+)
+
+plt.legend(
+    wedges,
+    condicao.index,
+    title="Condição meteorológica",
+    loc="center left",
+    bbox_to_anchor=(1, 0.5),
+    fontsize=9
+)
+
+plt.title(
+    "Acidentes por condição meteorológica - PRF 2024",
+    fontsize=14
+)
+
+plt.tight_layout()
+plt.show()
+
+# Totais de pessoas envolvidas nos sinistros
+total_feridos = dados["feridos"].sum()
+total_mortos = dados["mortos"].sum()
+total_ilesos = dados["ilesos"].sum()
+total_pessoas = dados["pessoas"].sum()
+
+print("Total de pessoas:", total_pessoas)
+print("Total de feridos:", total_feridos)
+print("Total de mortos:", total_mortos)
+print("Total de ilesos:", total_ilesos)
+
